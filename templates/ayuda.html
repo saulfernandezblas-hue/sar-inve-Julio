@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+{% block title %}Ayuda - SAR-INVENTORY{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+    <div>
+        <h2 class="fw-bold mb-1">Manual de Usuario</h2>
+        <p class="text-muted mb-0">Guía completa para el uso del sistema</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Sidebar Table of Contents -->
+    <div class="col-lg-3 fade-in" style="animation-delay: 0.1s;">
+        <div class="card glass-card sticky-top" style="top: 80px; z-index: 100;">
+            <div class="card-body p-0">
+                <h6 class="fw-bold p-3 border-bottom border-secondary border-opacity-25 mb-0 text-white"><i class="fa-solid fa-list-ul me-2"></i> Índice de Contenidos</h6>
+                <div class="list-group list-group-flush bg-transparent">
+                    <a href="#intro" class="list-group-item list-group-item-action bg-transparent text-light border-secondary border-opacity-25 toc-link">1. Introducción al Sistema</a>
+                    <a href="#login" class="list-group-item list-group-item-action bg-transparent text-light border-secondary border-opacity-25 toc-link">2. Inicio de Sesión y Roles</a>
+                    <a href="#dashboard" class="list-group-item list-group-item-action bg-transparent text-light border-secondary border-opacity-25 toc-link">3. Panel Principal</a>
+                    <a href="#inventario" class="list-group-item list-group-item-action bg-transparent text-light border-secondary border-opacity-25 toc-link">4. Gestión de Inventario</a>
+                    <a href="#reportes" class="list-group-item list-group-item-action bg-transparent text-light border-secondary border-opacity-25 toc-link">5. Generación de Reportes</a>
+                    <a href="#usuarios" class="list-group-item list-group-item-action bg-transparent text-light border-secondary border-opacity-25 toc-link">6. Gestión de Usuarios</a>
+                    <a href="#faq" class="list-group-item list-group-item-action bg-transparent text-light border-0 toc-link">7. Preguntas Frecuentes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="col-lg-9 fade-in" style="animation-delay: 0.2s;">
+        
+        <!-- Section 1: Intro -->
+        <div id="intro" class="card glass-card mb-4 section-anchor">
+            <div class="card-body p-4 p-lg-5">
+                <h4 class="fw-bold text-primary mb-4 border-bottom border-primary pb-2"><i class="fa-solid fa-circle-info me-2"></i> 1. Introducción al Sistema</h4>
+                <p><strong>SAR-INVENTORY</strong> es una plataforma web desarrollada específicamente para el Grupo de Búsqueda y Rescate (SAR) para gestionar, controlar y monitorear todos los recursos, materiales y equipos operativos.</p>
+                <div class="alert bg-primary bg-opacity-10 border-primary border-opacity-25 text-light mt-3">
+                    <h6 class="fw-bold text-primary"><i class="fa-solid fa-lightbulb me-2"></i> Beneficios Principales</h6>
+                    <ul class="mb-0 ps-3 mt-2">
+                        <li>Control en tiempo real del estado y cantidad de equipos.</li>
+                        <li>Trazabilidad total de quién agrega, modifica o elimina registros.</li>
+                        <li>Generación rápida de reportes para toma de decisiones logísticas.</li>
+                        <li>Identificación inmediata de equipos críticos que requieren mantenimiento.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 2: Login -->
+        <div id="login" class="card glass-card mb-4 section-anchor">
+            <div class="card-body p-4 p-lg-5">
+                <h4 class="fw-bold text-primary mb-4 border-bottom border-primary pb-2"><i class="fa-solid fa-right-to-bracket me-2"></i> 2. Inicio de Sesión y Roles</h4>
+                <p>El sistema es de acceso restringido. Dependiendo de sus responsabilidades, se le asignará uno de los siguientes roles:</p>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-4">
+                        <div class="p-3 border border-secondary border-opacity-50 rounded-3 h-100 bg-dark bg-opacity-25">
+                            <h6 class="text-accent fw-bold"><i class="fa-solid fa-shield-halved me-2"></i> Administrador</h6>
+                            <p class="small text-muted mb-0">Acceso total. Puede gestionar el inventario, generar reportes y crear/desactivar cuentas de usuario.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 border border-secondary border-opacity-50 rounded-3 h-100 bg-dark bg-opacity-25">
+                            <h6 class="text-success fw-bold"><i class="fa-solid fa-boxes-stacked me-2"></i> Logística</h6>
+                            <p class="small text-muted mb-0">Acceso operativo. Puede agregar, modificar y eliminar equipos, además de generar todos los reportes.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 border border-secondary border-opacity-50 rounded-3 h-100 bg-dark bg-opacity-25">
+                            <h6 class="text-info fw-bold"><i class="fa-solid fa-eye me-2"></i> Consulta</h6>
+                            <p class="small text-muted mb-0">Solo lectura. Puede ver el estado del inventario y generar reportes, pero no puede modificar datos.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert bg-warning bg-opacity-10 border-warning border-opacity-25 text-light mt-4 mb-0">
+                    <i class="fa-solid fa-triangle-exclamation text-warning me-2"></i> <strong>Seguridad:</strong> El sistema bloqueará automáticamente una cuenta por 5 minutos después de 5 intentos fallidos de inicio de sesión. La sesión se cerrará automáticamente tras 30 minutos de inactividad.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 3: Dashboard -->
+        <div id="dashboard" class="card glass-card mb-4 section-anchor">
+            <div class="card-body p-4 p-lg-5">
+                <h4 class="fw-bold text-primary mb-4 border-bottom border-primary pb-2"><i class="fa-solid fa-chart-line me-2"></i> 3. Panel Principal (Dashboard)</h4>
+                <p>Es la pantalla inicial que proporciona un resumen ejecutivo del estado del grupo:</p>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <span class="badge bg-primary me-2 px-2 py-1">Tarjetas de Resumen</span> Muestran el recuento total de equipos y su distribución porcentual por estado (Bueno, Regular, Malo). Hacer clic en una tarjeta lo llevará al inventario filtrado.
+                    </li>
+                    <li class="mb-3">
+                        <span class="badge bg-warning text-dark me-2 px-2 py-1">Alertas</span> Lista automática de equipos que requieren atención urgente (estado malo o cantidad menor a 3).
+                    </li>
+                    <li class="mb-3">
+                        <span class="badge bg-info text-dark me-2 px-2 py-1">Gráficos</span> Visualización rápida de la proporción de equipos por estado y por categoría.
+                    </li>
+                    <li class="mb-0">
+                        <span class="badge bg-secondary me-2 px-2 py-1">Últimos Movimientos</span> Bitácora de las operaciones más recientes realizadas por los usuarios en el sistema.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 4: Inventario -->
+        <div id="inventario" class="card glass-card mb-4 section-anchor">
+            <div class="card-body p-4 p-lg-5">
+                <h4 class="fw-bold text-primary mb-4 border-bottom border-primary pb-2"><i class="fa-solid fa-boxes-stacked me-2"></i> 4. Gestión de Inventario</h4>
+                
+                <h5 class="fw-bold text-white mt-4 mb-3">Registrar Nuevo Equipo</h5>
+                <ol class="text-light">
+                    <li>Haga clic en el botón azul <strong class="text-primary">"Nuevo Equipo"</strong> en la parte superior derecha.</li>
+                    <li>Complete el <strong>Código</strong> (debe ser único).</li>
+                    <li>Ingrese el <strong>Nombre</strong> y seleccione la <strong>Cantidad</strong>.</li>
+                    <li>Seleccione el <strong>Estado de Conservación</strong> y la <strong>Categoría</strong> operativa.</li>
+                    <li>Haga clic en <strong class="text-success">"Guardar Equipo"</strong>.</li>
+                </ol>
+
+                <h5 class="fw-bold text-white mt-4 mb-3">Buscar y Filtrar</h5>
+                <p>Utilice la barra de herramientas sobre la tabla para encontrar rápidamente lo que busca:</p>
+                <ul>
+                    <li><strong>Búsqueda de texto:</strong> Escriba parte del código o nombre; la tabla se filtrará automáticamente mientras escribe.</li>
+                    <li><strong>Filtros desplegables:</strong> Seleccione un estado o una categoría específicos para reducir la lista.</li>
+                    <li>Puede combinar la búsqueda de texto con los filtros desplegables.</li>
+                </ul>
+
+                <h5 class="fw-bold text-white mt-4 mb-3">Editar o Eliminar (Solo Admin/Logística)</h5>
+                <p>En la columna de "Acciones" de cada fila encontrará los botones correspondientes:</p>
+                <ul>
+                    <li><i class="fa-solid fa-pencil text-warning"></i> <strong>Editar:</strong> Carga los datos en el formulario superior para modificar cantidad, estado o nombre. <em>Nota: El código no se puede cambiar.</em></li>
+                    <li><i class="fa-solid fa-trash text-danger"></i> <strong>Eliminar:</strong> Solicitará confirmación antes de borrar permanentemente el registro.</li>
+                    <li><i class="fa-solid fa-eye text-primary"></i> <strong>Ver Detalles:</strong> Abre una ventana con la información completa del equipo.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 5: Reportes -->
+        <div id="reportes" class="card glass-card mb-4 section-anchor">
+            <div class="card-body p-4 p-lg-5">
+                <h4 class="fw-bold text-primary mb-4 border-bottom border-primary pb-2"><i class="fa-solid fa-file-pdf me-2"></i> 5. Generación de Reportes</h4>
+                <p>El módulo de reportes permite extraer la información en formatos portables. El proceso es de dos pasos:</p>
+                
+                <ol class="text-light mb-4">
+                    <li><strong>Seleccione el tipo:</strong> Elija entre General, Por Estado, Por Categoría, Críticos o Historial de Movimientos.</li>
+                    <li><strong>Seleccione el filtro específico:</strong> Si elige "Por Estado" o "Por Categoría", aparecerá un menú adicional para seleccionar cuál desea ver.</li>
+                    <li><strong>Genere:</strong> Haga clic en "Generar Reporte" para ver los resultados en pantalla.</li>
+                </ol>
+                
+                <h6 class="fw-bold text-white">Opciones de Exportación</h6>
+                <div class="row g-2 mt-2">
+                    <div class="col-sm-4">
+                        <div class="p-2 border border-secondary border-opacity-50 text-center rounded bg-dark bg-opacity-25">
+                            <i class="fa-solid fa-print text-secondary fs-4 d-block mb-2"></i>
+                            <strong>Imprimir</strong>
+                            <div class="small text-muted mt-1">Directo a impresora con formato limpio en blanco y negro</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="p-2 border border-secondary border-opacity-50 text-center rounded bg-dark bg-opacity-25">
+                            <i class="fa-solid fa-file-pdf text-danger fs-4 d-block mb-2"></i>
+                            <strong>PDF</strong>
+                            <div class="small text-muted mt-1">Genera un documento PDF oficial con el logo del Grupo SAR</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="p-2 border border-secondary border-opacity-50 text-center rounded bg-dark bg-opacity-25">
+                            <i class="fa-solid fa-file-excel text-success fs-4 d-block mb-2"></i>
+                            <strong>Excel</strong>
+                            <div class="small text-muted mt-1">Descarga una hoja de cálculo editable con todos los datos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: FAQ -->
+        <div id="faq" class="card glass-card mb-4 section-anchor">
+            <div class="card-body p-4 p-lg-5">
+                <h4 class="fw-bold text-primary mb-4 border-bottom border-primary pb-2"><i class="fa-solid fa-comments me-2"></i> 7. Preguntas Frecuentes</h4>
+                
+                <div class="accordion custom-accordion" id="faqAccordion">
+                    <div class="accordion-item glass-panel border-secondary border-opacity-25 mb-2 rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-dark bg-opacity-50 text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                ¿Qué hago si olvidé mi contraseña?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-light bg-dark bg-opacity-25 border-top border-secondary border-opacity-25">
+                                Actualmente el sistema no envía correos de recuperación. Debe contactar al Administrador del sistema para que le restablezca la contraseña (la cual volverá a ser temporalmente 'sar12345').
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item glass-panel border-secondary border-opacity-25 mb-2 rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-dark bg-opacity-50 text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                ¿Por qué no puedo eliminar ni editar equipos?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-light bg-dark bg-opacity-25 border-top border-secondary border-opacity-25">
+                                Si no ve los botones de edición (lápiz amarillo) o eliminación (basurero rojo), significa que su cuenta tiene el rol de "Consulta". Este rol es estrictamente de solo lectura. Solicite una actualización de rol si necesita modificar datos.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item glass-panel border-secondary border-opacity-25 mb-2 rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-dark bg-opacity-50 text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Eliminé un equipo por error, ¿se puede recuperar?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-light bg-dark bg-opacity-25 border-top border-secondary border-opacity-25">
+                                <strong>No.</strong> La eliminación de equipos es permanente. Sin embargo, el registro de la eliminación queda guardado en el "Historial de Movimientos", por lo que puede verificar allí qué datos tenía el equipo para volver a registrarlo manualmente.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Scroll to top button -->
+<a href="#" class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4 shadow-lg fade-in" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 1000;">
+    <i class="fa-solid fa-arrow-up"></i>
+</a>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+    /* Smooth scrolling padding offset for fixed header */
+    .section-anchor {
+        scroll-margin-top: 100px;
+    }
+</style>
+<script>
+    // Simple script to highlight active TOC link on scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('.section-anchor');
+        const navLinks = document.querySelectorAll('.toc-link');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active', 'bg-primary', 'bg-opacity-25', 'border-primary', 'fw-bold');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active', 'bg-primary', 'bg-opacity-25', 'border-primary', 'fw-bold');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

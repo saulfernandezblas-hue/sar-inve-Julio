@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SAR-INVENTORY{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="dark-theme">
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-glass">
+        <div class="container-fluid">
+            <!-- Sidebar Toggle Button (Mobile) -->
+            <button class="btn btn-link text-light me-2 d-lg-none" id="sidebarToggle">
+                <i class="fa-solid fa-bars fs-4"></i>
+            </button>
+            
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('inventario.dashboard') }}">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="SAR Logo" class="brand-logo me-2">
+                <span class="brand-text fw-bold tracking-wide">SAR-INVENTORY</span>
+            </a>
+            
+            <div class="d-flex align-items-center ms-auto">
+                <div class="d-none d-md-flex align-items-center me-4">
+                    <i class="fa-regular fa-clock me-2 text-accent"></i>
+                    <span id="datetimeDisplay" class="text-light small"></span>
+                </div>
+                
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle text-light d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="user-avatar bg-primary text-white me-2">
+                            {{ current_user.nombre_completo[:1] }}
+                        </div>
+                        <div class="d-none d-sm-block text-end me-1">
+                            <div class="small fw-bold">{{ current_user.nombre_completo }}</div>
+                            <div class="badge bg-secondary-glass">{{ current_user.rol }}</div>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-glass">
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="fa-solid fa-right-from-bracket me-2"></i> Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-menu">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'inventario.dashboard' %}active{% endif %}" href="{{ url_for('inventario.dashboard') }}">
+                        <i class="fa-solid fa-house nav-icon"></i>
+                        <span>Inicio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'inventario.inventario' %}active{% endif %}" href="{{ url_for('inventario.inventario') }}">
+                        <i class="fa-solid fa-boxes-stacked nav-icon"></i>
+                        <span>Inventario</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'reportes.reportes' %}active{% endif %}" href="{{ url_for('reportes.reportes') }}">
+                        <i class="fa-solid fa-file-lines nav-icon"></i>
+                        <span>Reportes</span>
+                    </a>
+                </li>
+                
+                {% if current_user.rol == 'Administrador' %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'inventario.usuarios' %}active{% endif %}" href="{{ url_for('inventario.usuarios') }}">
+                        <i class="fa-solid fa-users-gear nav-icon"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+                {% endif %}
+                
+                <li class="nav-item mt-auto">
+                    <a class="nav-link {% if request.endpoint == 'ayuda' %}active{% endif %}" href="{{ url_for('ayuda') }}">
+                        <i class="fa-solid fa-circle-question nav-icon"></i>
+                        <span>Ayuda</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="small text-muted text-center">
+                &copy; 2024 Grupo SAR
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="mainContent">
+        <!-- Toast Container for Flash Messages -->
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% set bs_category = category if category in ('success', 'danger', 'warning', 'info') else ('danger' if category == 'error' else 'info') %}
+                        <div class="toast align-items-center text-bg-{{ bs_category }} border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    {{ message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        
+        <div class="container-fluid p-3 p-md-4">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Bootstrap 5.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- User info variables for JS -->
+    <script>
+        const CURRENT_USER = {
+            nombre_completo: "{{ current_user.nombre_completo }}",
+            nombre_usuario: "{{ current_user.nombre_usuario }}",
+            rol: "{{ current_user.rol }}"
+        };
+    </script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

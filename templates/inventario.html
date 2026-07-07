@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block title %}Inventario - SAR-INVENTORY{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+    <div>
+        <h2 class="fw-bold mb-1">Gestión de Inventario</h2>
+        <p class="text-muted mb-0">Administración de recursos de salvamento</p>
+    </div>
+    {% if current_user.rol != 'Consulta' %}
+    <button class="btn btn-primary btn-gradient shadow-sm" id="btnToggleForm" onclick="toggleForm()">
+        <i class="fa-solid fa-plus me-2"></i> <span id="toggleFormText">Nuevo Equipo</span>
+    </button>
+    {% endif %}
+</div>
+
+<!-- Form Section (Collapsible) -->
+{% if current_user.rol != 'Consulta' %}
+<div id="formSection" class="collapse {% if request.args.get('action') == 'new' %}show{% endif %} fade-in mb-4">
+    <div class="card glass-card border-primary">
+        <div class="card-header border-0 bg-transparent pt-3 pb-0 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold text-primary mb-0" id="formTitle"><i class="fa-solid fa-file-circle-plus me-2"></i> Registrar Nuevo Equipo</h5>
+            <button type="button" class="btn-close btn-close-white" onclick="toggleForm()" aria-label="Close"></button>
+        </div>
+        <div class="card-body">
+            <form id="equipoForm" class="needs-validation" novalidate>
+                <input type="hidden" id="equipoId" name="id">
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="codigo" class="form-label text-light small fw-medium">Código del Equipo <span class="text-danger">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <i class="fa-solid fa-barcode input-icon"></i>
+                            <input type="text" class="form-control glass-input" id="codigo" name="codigo" placeholder="Ej: CAM-001" required>
+                        </div>
+                        <div class="invalid-feedback">El código es obligatorio y debe ser único.</div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="nombre" class="form-label text-light small fw-medium">Nombre del Equipo <span class="text-danger">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <i class="fa-solid fa-tag input-icon"></i>
+                            <input type="text" class="form-control glass-input" id="nombre" name="nombre" placeholder="Ej: Camilla Rígida" required minlength="3">
+                        </div>
+                        <div class="invalid-feedback">Ingrese un nombre descriptivo (mínimo 3 caracteres).</div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <label for="cantidad" class="form-label text-light small fw-medium">Cantidad en Stock <span class="text-danger">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <i class="fa-solid fa-cubes input-icon"></i>
+                            <input type="number" class="form-control glass-input" id="cantidad" name="cantidad" min="1" value="1" required>
+                        </div>
+                        <div class="invalid-feedback">La cantidad debe ser mayor a 0.</div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <label for="estado" class="form-label text-light small fw-medium">Estado del Equipo <span class="text-danger">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <i class="fa-solid fa-heart-pulse input-icon z-1"></i>
+                            <select class="form-select glass-input ps-5" id="estado" name="estado" required>
+                                <option value="" disabled selected>Seleccione un estado...</option>
+                                <option value="Bueno">Bueno</option>
+                                <option value="Regular">Regular</option>
+                                <option value="Malo">Malo</option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback">Seleccione el estado de conservación.</div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <label for="categoria" class="form-label text-light small fw-medium">Categoría <span class="text-danger">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <i class="fa-solid fa-layer-group input-icon z-1"></i>
+                            <select class="form-select glass-input ps-5" id="categoria" name="categoria" required>
+                                <option value="" disabled selected>Seleccione una categoría...</option>
+                                <option value="Primeros Auxilios">Primeros Auxilios</option>
+                                <option value="Rescate Acuático">Rescate Acuático</option>
+                                <option value="Rescate Terrestre">Rescate Terrestre</option>
+                                <option value="Logística">Logística</option>
+                                <option value="Comunicaciones">Comunicaciones</option>
+                                <option value="Protección Personal">Protección Personal</option>
+                                <option value="Otra">Otra</option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback">Seleccione la categoría correspondiente.</div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="button" class="btn btn-outline-light" id="btnCancelEdit" onclick="cancelEdit()" style="display: none;">Cancelar Edición</button>
+                    <button type="button" class="btn btn-outline-light" onclick="toggleForm()" id="btnCancelForm">Cerrar</button>
+                    <button type="submit" class="btn btn-success" id="btnSaveForm"><i class="fa-solid fa-save me-2"></i> Guardar Equipo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Filters Section -->
+<div class="card glass-card mb-4 fade-in" style="animation-delay: 0.1s;">
+    <div class="card-body p-3">
+        <form id="filterForm" class="row g-2 align-items-center" onsubmit="event.preventDefault(); loadEquipos(1);">
+            <div class="col-12 col-md-5">
+                <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                    <input type="text" class="form-control glass-input" id="searchFilter" placeholder="Buscar por código o nombre...">
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <select class="form-select glass-input" id="estadoFilter" onchange="loadEquipos(1)">
+                    <option value="">Todos los Estados</option>
+                    <option value="Bueno">Bueno</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Malo">Malo</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-3">
+                <select class="form-select glass-input" id="categoriaFilter" onchange="loadEquipos(1)">
+                    <option value="">Todas las Categorías</option>
+                    <option value="Primeros Auxilios">Primeros Auxilios</option>
+                    <option value="Rescate Acuático">Rescate Acuático</option>
+                    <option value="Rescate Terrestre">Rescate Terrestre</option>
+                    <option value="Logística">Logística</option>
+                    <option value="Comunicaciones">Comunicaciones</option>
+                    <option value="Protección Personal">Protección Personal</option>
+                    <option value="Otra">Otra</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-1 text-end">
+                <button type="button" class="btn btn-outline-light w-100" onclick="clearFilters()" title="Limpiar Filtros">
+                    <i class="fa-solid fa-filter-circle-xmark"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Table Section -->
+<div class="card glass-card fade-in" style="animation-delay: 0.2s;">
+    <div class="card-header border-0 bg-transparent pt-3 pb-2 d-flex justify-content-between align-items-center">
+        <div class="text-muted small" id="tableInfo">Cargando inventario...</div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0 custom-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre del Equipo</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-center">Estado</th>
+                        <th>Categoría</th>
+                        <th>Fecha Registro</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="equiposTableBody">
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <div class="spinner-border text-primary me-2" role="status"></div>
+                            Cargando datos...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer bg-transparent border-0 py-3 d-flex justify-content-center">
+        <nav aria-label="Navegación de páginas">
+            <ul class="pagination pagination-sm mb-0 custom-pagination" id="paginationControls">
+                <!-- Pagination will be generated here -->
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- View Detail Modal -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-modal border-0">
+            <div class="modal-header border-bottom border-secondary border-opacity-25">
+                <h5 class="modal-title fw-bold text-white" id="viewModalLabel"><i class="fa-solid fa-circle-info text-primary me-2"></i> Detalle del Equipo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-25 rounded-circle mb-3" style="width: 80px; height: 80px;">
+                        <i class="fa-solid fa-box-open text-primary fs-1"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1" id="viewNombre">Nombre del Equipo</h4>
+                    <p class="text-muted mb-0 font-monospace" id="viewCodigo">COD-000</p>
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25 h-100">
+                            <small class="text-muted d-block mb-1">Cantidad en Stock</small>
+                            <span class="fs-4 fw-bold text-white" id="viewCantidad">0</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25 h-100 text-center">
+                            <small class="text-muted d-block mb-2">Estado Actual</small>
+                            <span id="viewEstado"></span>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
+                            <div class="d-flex justify-content-between mb-2">
+                                <small class="text-muted">Categoría:</small>
+                                <span class="fw-medium text-white" id="viewCategoria">-</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <small class="text-muted">Fecha de Registro:</small>
+                                <span class="text-light small" id="viewRegistro">-</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">Última Modificación:</small>
+                                <span class="text-light small" id="viewModificacion">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-light w-100" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content glass-modal border-0">
+            <div class="modal-body text-center p-4">
+                <i class="fa-solid fa-triangle-exclamation text-danger fs-1 mb-3"></i>
+                <h5 class="fw-bold text-white mb-3">Confirmar Eliminación</h5>
+                <p class="text-light mb-4">¿Está seguro de que desea eliminar permanentemente el equipo <strong id="deleteEquipoNombre" class="text-warning"></strong> (<span id="deleteEquipoCodigo"></span>)? Esta acción no se puede deshacer.</p>
+                <input type="hidden" id="deleteEquipoId">
+                
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn btn-secondary w-50" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger w-50" onclick="executeDelete()">Sí, Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Trigger inventory data load when this page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof loadEquipos === 'function') {
+            // Check URL parameters for initial filters
+            const urlParams = new URLSearchParams(window.location.search);
+            const estadoParam = urlParams.get('estado');
+            if (estadoParam) {
+                document.getElementById('estadoFilter').value = estadoParam;
+            }
+            loadEquipos(1);
+        }
+        
+        // Auto-close form if "action=new" is in URL
+        {% if request.args.get('action') == 'new' %}
+        setTimeout(() => document.getElementById('codigo').focus(), 500);
+        {% endif %}
+    });
+</script>
+{% endblock %}

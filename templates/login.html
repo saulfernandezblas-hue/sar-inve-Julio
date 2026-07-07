@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - SAR-INVENTORY</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="login-body">
+    <!-- Floating particles background container -->
+    <div class="particles"></div>
+
+    <div class="container d-flex flex-column justify-content-center align-items-center min-vh-100">
+        
+        <!-- Toast Container for Flash Messages -->
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% set bs_category = 'success' if category == 'success' else ('danger' if category == 'error' else 'warning') %}
+                        <div class="toast align-items-center text-bg-{{ bs_category }} border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body fw-medium">
+                                    {% if category == 'error' %}<i class="fa-solid fa-triangle-exclamation me-2"></i>{% endif %}
+                                    {{ message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="login-card glass-panel fade-in-up">
+            <div class="text-center mb-4">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="SAR Logo" class="login-logo mb-3">
+                <h2 class="fw-bold tracking-wide text-white mb-1">SAR-INVENTORY</h2>
+                <p class="text-muted small">Sistema de Gestión de Recursos de Salvamento</p>
+            </div>
+
+            <form action="{{ url_for('auth.login') }}" method="POST" id="loginForm" class="needs-validation" novalidate>
+                <div class="mb-4 position-relative">
+                    <div class="input-icon-wrapper">
+                        <i class="fa-solid fa-user input-icon"></i>
+                        <input type="text" class="form-control glass-input" id="username" name="username" placeholder="Ingrese su usuario" required minlength="4">
+                    </div>
+                    <div class="invalid-feedback ps-2">
+                        El usuario debe tener al menos 4 caracteres.
+                    </div>
+                </div>
+
+                <div class="mb-4 position-relative">
+                    <div class="input-icon-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" class="form-control glass-input" id="password" name="password" placeholder="Ingrese su contraseña" required>
+                    </div>
+                    <div class="invalid-feedback ps-2">
+                        La contraseña es obligatoria.
+                    </div>
+                </div>
+
+                <div class="d-grid mb-3 mt-4">
+                    <button type="submit" class="btn btn-primary btn-gradient py-2 fw-bold" id="loginBtn">
+                        Ingresar al Sistema <i class="fa-solid fa-arrow-right-to-bracket ms-2"></i>
+                    </button>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <a href="#" class="text-muted small text-decoration-none hover-accent">¿Olvidó su contraseña?</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="login-footer mt-5 text-center text-muted small fade-in">
+            <p>Grupo SAR - Sistema de uso exclusivo para personal autorizado &copy; 2024</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Custom login validation logic
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('loginForm');
+            const btn = document.getElementById('loginBtn');
+            
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                } else {
+                    // Prevent double submit
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Ingresando...';
+                    btn.classList.add('disabled');
+                }
+                form.classList.add('was-validated');
+            }, false);
+            
+            // Generate some random particles for background
+            const particlesContainer = document.querySelector('.particles');
+            for(let i=0; i<20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                particle.style.animationDelay = (Math.random() * 5) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        });
+    </script>
+</body>
+</html>
